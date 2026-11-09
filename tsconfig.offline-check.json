@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {"noEmit": true},
+  "include": ["src/**/*.ts", "tools/check-types-shim.d.ts"]
+}

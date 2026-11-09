@@ -1,0 +1,21 @@
+<app-header [title]="all?'Todos los módulos':'Módulo '+module.id" back="/modulos"/>
+<main class="page with-header topics-page">
+  <section class="module-hero"><span class="eyebrow">{{all?'REPASO GENERAL':'FORMACIÓN BACKEND'}}</span><h2>{{all?'Todos los módulos':module.name}}</h2>
+    <p>{{all?'Estudia los temas de todos los módulos disponibles.': 'Repasa por temas los contenidos del módulo 1 y lo trabajado durante tu formación.'}}</p>
+    <div class="hero-progress"><div><strong>{{percent()}}%</strong><span>exploradas</span></div>
+      <div class="progress-track"><span [style.width.%]="percent()"></span></div><small>{{seen()}} / {{cards.length}}</small>
+    </div>
+  </section>
+  <button type="button" class="primary-button wide" (click)="open()"><app-icon name="play" [size]="18"/>Estudiar todos los temas</button>
+  <div class="section-title topic-title"><h2>Temas</h2><span>{{cards.length}} tarjetas</span></div>
+  <div class="topic-list">
+    @for(topic of topics;track topic.id){
+      <button type="button" (click)="open(topic.id)">
+        <div class="topic-icon"><app-icon name="code" [size]="20"/></div>
+        <div><strong>{{topic.name}}</strong><span>{{count(topic.id)}} tarjetas · {{seenTopic(topic.id)?seenTopic(topic.id)+' revisadas':'Sin empezar'}}</span></div>
+        <div class="topic-end"><app-icon name="chevron" [size]="18"/></div>
+      </button>
+    }
+  </div>
+  <button class="outline-button" type="button" (click)="open('all','weak')"><app-icon name="refresh" [size]="18"/>Repasar tarjetas falladas</button>
+</main>

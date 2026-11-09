@@ -1,0 +1,17 @@
+<app-header title="Módulos"/>
+<main class="page with-header"><div class="intro-copy"><span class="eyebrow">RUTA BACKEND</span>
+  <h2>14 módulos para dominar el backend</h2><p>Avanza a tu ritmo. Estudia un módulo o todos los que estén disponibles.</p></div>
+  <div class="module-list">
+    <button class="module-row all-modules" type="button" (click)="open('all')">
+      <div class="module-index"><app-icon name="layers" [size]="17"/></div><div><small>REPASO GENERAL</small><strong>Todos los módulos</strong>
+      <span>Combina las tarjetas de los módulos disponibles</span></div><app-icon name="chevron" [size]="19"/>
+    </button>
+    @for(module of modules;track module.id){
+    <button class="module-row" type="button" [class.open]="module.available" [class.locked]="!module.available" [disabled]="!module.available" (click)="open(module.id)">
+      <div class="module-index">{{module.id}}</div><div><small>{{module.available?'MÓDULO ACTUAL':'MÓDULO '+module.id}}</small>
+        <strong>{{module.name}}</strong><span>{{module.phase}} · {{module.available ? (module.cards?.length??0)+' tarjetas' : 'Pendiente'}}</span>
+      </div><app-icon [name]="module.available?'chevron':'lock'" [size]="module.available?19:16"/>
+    </button>
+    }
+  </div>
+</main>

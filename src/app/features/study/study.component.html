@@ -1,0 +1,53 @@
+@if(study.session();as session){
+  @if(study.card();as card){
+    <div class="study-shell">
+      <header class="study-header"><button class="icon-button" type="button" (click)="home()" aria-label="Pausar y salir"><app-icon name="close"/></button>
+        <div><strong>{{position()}} <span>/ {{total()}}</span></strong><div class="study-track"><i [style.width.%]="progressPct()"></i></div></div>
+        <button class="icon-button" type="button" (click)="study.pause()" aria-label="Pausar"><app-icon name="pause"/></button>
+      </header>
+      <main class="study-main"><div class="card-label"><span>{{card.topicId | topicLabel}}</span><small>{{level[card.difficulty]}} · TARJETA {{card.id}}</small></div>
+        <article class="flashcard">
+          @if(card.context){<p class="context">{{card.context}}</p>}
+          <h1>{{card.question}}</h1>
+          @if(card.questionCode){<app-code-viewer [code]="card.questionCode" [language]="card.codeLanguage??'java'"/>}
+          @if(!session.revealed){
+            <button type="button" class="text-button" (click)="showDraft.set(!showDraft())">{{showDraft()?'Ocultar mi respuesta':'Escribir mi respuesta (opcional)'}}</button>
+            @if(showDraft()){
+              <label class="study-draft-label" for="self-answer">Tu respuesta</label>
+              <textarea id="self-answer" class="study-draft" placeholder="Escribe tus ideas, o responde mentalmente..." [value]="session.draft" (input)="changeDraft($event)"></textarea>
+            }
+          }
+          @if(session.revealed){<section class="answer"><span class="answer-label">SOLUCIÓN</span><p>{{card.answer}}</p>
+            @if(card.answerCode){<app-code-viewer [code]="card.answerCode" [language]="card.codeLanguage??'java'"/>}
+            @if(card.explanation){<p>{{card.explanation}}</p>}
+            @if(card.focus){<p class="small-muted">Para reforzar: {{card.focus}}</p>}
+            @if(session.draft){<p class="card-meta">Tu respuesta: {{session.draft}}</p>}
+          </section>}
+        </article>
+      </main>
+      <footer class="study-actions">
+        @if(!session.revealed){<p>Tómate tu tiempo para responder</p>
+          <button class="primary-button wide" type="button" (click)="study.reveal()">Ver solución</button>
+        }@else{<p>¿Qué tal lo sabías?</p><div class="rating-row">
+          <button class="bad" type="button" (click)="rate('bad')"><span>×</span><strong>Mal</strong><small>Repetir pronto</small></button>
+          <button class="regular" type="button" (click)="rate('medium')"><span>—</span><strong>Regular</strong><small>Seguir practicando</small></button>
+          <button class="good" type="button" (click)="rate('good')"><span>✓</span><strong>Bien</strong><small>Lo tengo</small></button>
+        </div>}
+      </footer>
+    </div>
+    @if(paused()){
+      <div class="overlay"><div class="pause-modal"><div class="pause-icon"><app-icon name="pause" [size]="28"/></div>
+      <h2>Sesión en pausa</h2><p>Tu progreso está guardado. Puedes retomarla cuando quieras.</p>
+      <button class="primary-button wide" type="button" (click)="study.resume()"><app-icon name="play" [size]="18"/>Continuar</button>
+      <button class="text-button" type="button" (click)="home()">Salir de la sesión</button></div></div>
+    }
+  }@else{
+    <main class="study-complete"><h1>¡Sesión completada!</h1><p>Has terminado el bloque de estudio. Puedes revisar tus resultados y seguir cuando quieras.</p>
+      <div class="review-counters"><span><strong>{{session.summary.bad}}</strong>Mal</span><span><strong>{{session.summary.medium}}</strong>Regular</span><span><strong>{{session.summary.good}}</strong>Bien</span></div>
+      <button class="primary-button wide" type="button" (click)="end()">Ver progreso</button><button class="text-button" type="button" (click)="newSession()">Volver a módulos</button>
+    </main>
+  }
+}@else{
+  <main class="study-complete"><h1>No tienes una sesión activa</h1><p>Selecciona un módulo o un tema para empezar.</p>
+  <button class="primary-button wide" type="button" (click)="router.navigateByUrl('/modulos')">Ver módulos</button></main>
+}

@@ -1,0 +1,53 @@
+<div class="app-shell" [class.dark]="progress.theme() === 'dark'">
+  <router-outlet/>
+  @if(!studyScreen()){
+  <nav class="bottom-nav" aria-label="Navegación principal">
+    @for(item of navItems; track item.url){
+      <button type="button" [routerLink]="item.url" routerLinkActive="active" [routerLinkActiveOptions]="{exact:item.url==='/inicio'}">
+        <app-icon [name]="item.icon"/><span>{{item.label}}</span>
+      </button>
+    }
+  </nav>
+  }
+  @if(launcher.opened()){
+    <div class="overlay sheet-overlay" (click)="launcher.close()">
+      <section class="session-sheet" role="dialog" aria-modal="true" aria-label="Nueva sesión" (click)="$event.stopPropagation()">
+        <div class="sheet-handle"></div>
+        <div class="sheet-title"><div><span class="eyebrow">NUEVA SESIÓN</span><h2>¿Cuánto quieres estudiar?</h2></div>
+          <button class="icon-button" type="button" (click)="launcher.close()" aria-label="Cerrar"><app-icon name="close"/></button>
+        </div>
+        <p>Elige el número de tarjetas. Puedes pausar en cualquier momento.</p>
+        <div class="session-options">
+          @for(size of [5,10,20,0];track size){
+            <button type="button" [class.active]="launcher.size()===size" (click)="launcher.size.set(size)">
+              <strong>{{size || '∞'}}</strong><span>{{size ? 'tarjetas' : 'Sin límite'}}</span>
+            </button>
+          }
+        </div>
+        <div class="session-choice">
+          <label>Módulo
+          <select aria-label="Elegir módulo" [value]="launcher.moduleId()" (change)="setModule($any($event.target).value)">
+            <option value="all">Todos los módulos</option>
+            @for(mod of modules;track mod.id){<option [value]="mod.id">{{mod.id}} · {{mod.name}}</option>}
+          </select></label>
+          <label>Tema
+          <select aria-label="Elegir tema" [value]="launcher.topicId()" (change)="launcher.topicId.set($any($event.target).value)">
+            <option value="all">Todos los temas</option>
+            @for(topic of topics;track topic.id){<option [value]="topic.id">{{topic.shortName}}</option>}
+          </select></label>
+          <label>Tipo de repaso
+          <select aria-label="Tipo de repaso" [value]="launcher.mode()" (change)="launcher.mode.set($any($event.target).value)">
+            <option value="progressive">Progresivo</option><option value="balanced">General</option><option value="due">Pendientes</option>
+            <option value="weak">Mal y regular</option><option value="unseen">Sin estudiar</option>
+          </select></label>
+          <label>Dificultad
+          <select aria-label="Dificultad" [value]="launcher.difficulty()" (change)="launcher.difficulty.set($any($event.target).value)">
+            <option value="all">Todas</option><option value="basic">Básica</option><option value="intermediate">Intermedia</option><option value="advanced">Avanzada</option>
+          </select></label>
+        </div>
+        @if(launcher.error()){<p class="message-line">{{launcher.error()}}</p>}
+        <button class="primary-button wide" type="button" (click)="launcher.start()"><app-icon name="play" [size]="18"/>Empezar sesión</button>
+      </section>
+    </div>
+  }
+</div>

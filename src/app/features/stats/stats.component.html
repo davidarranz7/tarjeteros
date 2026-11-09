@@ -1,0 +1,29 @@
+<app-header title="Tu progreso"/>
+<main class="page with-header">
+  <div class="period"><button type="button" [class.active]="period()===7" (click)="period.set(7)">7 días</button>
+    <button type="button" [class.active]="period()===30" (click)="period.set(30)">30 días</button>
+    <button type="button" [class.active]="period()===0" (click)="period.set(0)">Todo</button></div>
+  <div class="stats-filter"><span class="small-muted">Filtrar estadísticas</span>
+    <select aria-label="Filtrar por módulo" [value]="moduleId()" (change)="onModule($event)"><option value="all">Todos los módulos</option>
+    @for(m of modules;track m.id){<option [value]="m.id">{{m.name}}</option>}
+    </select>
+  </div>
+  <section class="accuracy-card"><div class="accuracy-ring" [style.--progress]="(accuracy()*3.6)+'deg'"><div><strong>{{accuracy()}}%</strong><span>precisión</span></div></div>
+    <div><span>RENDIMIENTO GENERAL</span><h2>{{accuracy()>=70?'Buen trabajo':'Sigue practicando'}}</h2>
+      <p>Has realizado {{stats().total}} repasos. Cada repaso consolida lo aprendido.</p></div></section>
+  <div class="stats-grid">
+    <div class="stat-box good"><span>✓</span><div><strong>{{stats().good}}</strong><small>Bien</small></div></div>
+    <div class="stat-box regular"><span>—</span><div><strong>{{stats().medium}}</strong><small>Regular</small></div></div>
+    <div class="stat-box bad"><span>×</span><div><strong>{{stats().bad}}</strong><small>Mal</small></div></div>
+    <div class="stat-box total"><span><app-icon name="layers" [size]="18"/></span><div><strong>{{stats().total}}</strong><small>Repasos</small></div></div>
+  </div>
+  <section class="chart-card"><div class="section-title"><div><small>EVOLUCIÓN</small><h2>Actividad</h2></div><span>Últimas 2 semanas</span></div>
+    <div class="bars">@for(bar of recentBars();track $index){<div [title]="bar.count+' repasos'"><i [class.today]="bar.today" [style.height.%]="bar.height"></i></div>}</div>
+    <div class="axis"><span>L</span><span>X</span><span>V</span><span>D</span><span>M</span><span>J</span><span>S</span></div>
+  </section>
+  <section class="streak"><div class="streak-icon"><app-icon name="refresh" [size]="18"/></div><div>
+    <small>PARA REPASAR</small><strong>{{progress.weakCount()}} tarjetas necesitan refuerzo</strong>
+    <span>Se priorizan si te has evaluado con Mal o Regular</span></div></section>
+  @if(weakTopics().length){<section class="section"><div class="section-title"><h2>Temas a reforzar</h2></div>
+  <div class="topic-list">@for(t of weakTopics();track t[0]){<div class="setting-row"><strong>{{topicName(t[0])}}</strong><span>{{t[1]}} tarjetas</span></div>}</div></section>}
+</main>

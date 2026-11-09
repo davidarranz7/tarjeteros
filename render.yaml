@@ -1,0 +1,14 @@
+# Blueprint de Render: sitio estático Angular, sin servidor que se duerma.
+services:
+  - type: web
+    runtime: static
+    name: backend-lab-plexus
+    buildCommand: npm install --no-audit --no-fund && npm run build
+    staticPublishPath: dist/plexus-backend-trainer/browser
+    envVars:
+      - key: NODE_VERSION
+        value: 22.16.0
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

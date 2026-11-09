@@ -1,0 +1,10 @@
+/node_modules
+/dist
+/.angular
+/out-tsc
+/.idea
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+*.log
+*.tsbuildinfo

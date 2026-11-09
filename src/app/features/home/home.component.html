@@ -1,0 +1,30 @@
+<main class="page page-home">
+  <div class="home-head"><div><span class="eyebrow">PLEXUS TRAINER</span><h1>{{greeting()}}</h1><p>Un poco cada día hace la diferencia.</p></div>
+  <button class="avatar" type="button" aria-label="Ir a ajustes" (click)="router.navigateByUrl('/ajustes')">JD</button></div>
+  <section class="continue-card">
+    <div class="continue-top"><span class="status-dot"></span><span>{{study.session() && !study.finished() ? 'SESIÓN EN CURSO' : 'TU PRÓXIMA SESIÓN'}}</span>
+      @if(study.session() && !study.finished()){<small>{{sessionPointer()}} de {{sessionCount()}}</small>}
+    </div>
+    <h2>{{module.name}}</h2><p>Java moderno y Git · Módulo 01</p>
+    <div class="progress-track"><span [style.width.%]="study.session() && !study.finished() ? study.sessionPercent() : seenPct()"></span></div>
+    <button class="primary-button white" type="button" (click)="continue()"><app-icon name="play" [size]="18"/>
+      {{study.session() && !study.finished() ? 'Continuar estudiando' : 'Empezar a estudiar'}}
+    </button>
+  </section>
+  <section class="section"><div class="section-title"><h2>Hoy</h2><span>Objetivo: {{prefs.values().goal}} tarjetas</span></div>
+    <div class="daily-grid">
+      <div class="goal-ring" [style.--progress]="ring()"><div><strong>{{today()}}</strong><span>de {{prefs.values().goal}}</span></div></div>
+      <div class="metric"><strong>{{todayGood()}}</strong><span>Bien</span><small class="up">Hoy</small></div>
+      <div class="metric"><strong>{{weeklyPrecision()}}%</strong><span>Precisión</span><small>Esta semana</small></div>
+    </div>
+  </section>
+  <section class="section"><div class="section-title"><h2>Tu formación</h2><button type="button" (click)="router.navigateByUrl('/modulos')">Ver todo</button></div>
+    <button class="module-feature" type="button" (click)="openModule()">
+      <div class="module-number">01</div>
+      <div class="module-info"><small>{{seen() ? 'EN PROGRESO' : 'LISTO PARA EMPEZAR'}}</small><strong>{{module.name}}</strong>
+        <span>{{seen()}} de {{total}} tarjetas revisadas</span><div class="mini-track"><i [style.width.%]="seenPct()"></i></div>
+      </div><app-icon name="chevron"/>
+    </button>
+    <div class="next-module"><span>02</span><div><strong>Maven y Spring Boot</strong><small>Disponible cuando añadamos el módulo 2</small></div><app-icon name="lock" [size]="17"/></div>
+  </section>
+</main>
